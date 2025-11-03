@@ -10,67 +10,83 @@
 
 ## Descripción
 
-Este proyecto es muy sencillo: consta de dos archivos **Python** y tres carpetas principales.
+Este proyecto tiene como objetivo desarrollar y validar un sistema de segmentación automática de estructuras cardíacas en imágenes médicas tridimensionales obtenidas mediante resonancia magnética, utilizando redes neuronales convolucionales basadas en la arquitectura **3D U-Net**.
+
+El repositorio incluye los scripts de entrenamiento, predicción y evaluación del modelo, junto con las carpetas necesarias para la gestión de datos, modelos y resultados.
 
 ---
 
 ## Estructura de carpetas
 
-- **/data**: Contiene los datos necesarios para el entrenamiento, incluyendo el archivo `Study.vtk` (imagen de resonancia magnética) y las máscaras binarias correspondientes a cada estructura.  
-- **/models**: Aquí se guardan las redes neuronales ya entrenadas y sus gráficas de entrenamiento (curvas de pérdida).  
-- **/outputs**: Carpeta donde se almacenan las salidas generadas durante la fase de predicción: imágenes, volúmenes en formato `.vtk` y modelos 3D.  
+- **/data** → Contiene los datos utilizados durante el entrenamiento, incluyendo el archivo `Study.vtk` (imagen de resonancia magnética) y las máscaras binarias correspondientes a cada estructura anatómica.  
+- **/models** → Carpeta donde se almacenan las redes neuronales ya entrenadas y las gráficas de entrenamiento (curvas de pérdida).  
+- **/outputs** → Contiene las salidas generadas durante la fase de predicción: imágenes, volúmenes `.vtk` y reconstrucciones 3D.  
+- **/test** → Carpeta con las imágenes y máscaras reales utilizadas en la fase de validación.  
+- **/output_test** → Carpeta donde se guardan los resultados de la evaluación automática realizada sobre los datos de `/test`.  
 
 ---
 
 ## Archivos principales
 
 ### 🔹 `generator (1).py`
-- Se encarga de generar y entrenar las redes neuronales desde cero.  
-- Al finalizar, guarda el modelo entrenado y su gráfica de pérdida en la carpeta `/models`.  
-- **No es necesario modificar nada en este archivo**, ya está completamente configurado para funcionar.  
-- No deberías ejecutarlo salvo que quieras entrenar nuevamente desde cero, ya que los modelos entrenados y sus gráficas ya están proporcionados.  
+- Genera y entrena las redes neuronales desde cero.  
+- Al finalizar, guarda los modelos entrenados y sus curvas de pérdida en `/models`.  
+- **No es necesario modificar nada en este archivo**, ya está completamente configurado.  
+- Solo debería ejecutarse si se desea realizar un nuevo entrenamiento, ya que sobrescribe los modelos existentes.  
 
-Dentro del archivo existe un **diccionario de configuración** que indica:  
+El archivo contiene un **diccionario de configuración** donde se puede especificar:  
 - Qué red neuronal entrenar.  
-- Número de épocas a utilizar.  
-- Si se debe entrenar o no (`True` o `False`).  
+- Número de épocas.  
+- Activar o desactivar el entrenamiento (`True` / `False`).  
 
 ⚠️ **Importante:**  
-Si ejecutas este archivo, **se sobrescribirá todo lo que haya en `/models`**.  
-Si tienes un modelo que funciona bien y quieres probar otro, recuerda guardar el anterior en otra ubicación para no perderlo.  
+Si se ejecuta este archivo, todo el contenido de `/models` será reemplazado. Se recomienda hacer una copia de seguridad antes de iniciar un nuevo entrenamiento.
 
 ---
 
 ### 🔹 `predict (1).py`
-- Utiliza los modelos almacenados en `/models` para generar varias salidas:  
-  - Una visualización en consola con tres imágenes:  
+- Utiliza los modelos almacenados en `/models` para generar salidas automáticas:  
+  - Visualización de tres imágenes en consola:  
     1. Resonancia original.  
     2. Máscara real.  
-    3. Predicción de la red.  
-  - Una salida volumétrica en formato `.vtk` que muestra las tres vistas (planta, alzado y perfil) del resultado de la segmentación.  
-  - Una salida en formato `.vtk` en 3D que representa el modelo tridimensional (malla o superficie).  
+    3. Predicción del modelo.  
+  - Generación de archivos volumétricos `.vtk` con las tres vistas (planta, alzado y perfil).  
+  - Creación de modelos 3D en formato `.vtk` que representan las estructuras segmentadas.  
 
-Todo se guarda automáticamente en la carpeta `/outputs`.  
+Todas las salidas se guardan automáticamente en la carpeta `/outputs`.  
+El archivo está configurado para ejecutarse de manera automática, modificando únicamente el **diccionario de configuración** para:  
+- Seleccionar la estructura cardíaca que se desea analizar.  
+- Activar (`True`) o desactivar (`False`) la ejecución de la predicción.
 
-El archivo ya está configurado para funcionar automáticamente. Solo necesitas modificar el **diccionario de configuración** para:  
-- Indicar qué estructura cardíaca analizar.  
-- Activar (`True`) o desactivar (`False`) la ejecución de esa predicción.  
+---
+
+### 🔹 `evaluation(1).ipynb`
+- **Cuaderno Jupyter de validación del modelo**.  
+- Carga las predicciones generadas y las máscaras reales almacenadas en la carpeta `/test`.  
+- Calcula las métricas **Dice** e **IoU** para cada estructura segmentada.  
+- Genera tablas comparativas y gráficos que muestran el rendimiento por estructura.  
+- Incluye visualizaciones 2D/3D para la comparación cualitativa entre las predicciones y las máscaras de referencia.  
+- Las salidas del proceso de validación se almacenan automáticamente en la carpeta `/output_test`.  
+
+> 💡 **Nota:** Ejecutar este cuaderno una vez generadas las predicciones con `predict (1).py`, asegurando que las carpetas `/test` y `/output_test` estén correctamente configuradas.
 
 ---
 
 ## ⚠️ Notas importantes
-- Cuando ejecutes la **primera celda** de cada archivo, el entorno pedirá reiniciar la sesión **una vez**.  
-- La segunda vez que lo solicite, debes **cancelar** el reinicio y continuar con la ejecución del resto de celdas.  
+- Al ejecutar la **primera celda** de cualquiera de los scripts, el entorno puede solicitar reiniciar la sesión **una sola vez**.  
+- Si lo solicita de nuevo inmediatamente después, **cancelar** el segundo reinicio y continuar la ejecución con normalidad.  
 
 ---
 
-## Contenido
+## Contenido del repositorio
 
-- Código fuente para el análisis de datos y modelado  
-- Conjunto de datos utilizados  
-- Documentación del modelo y resultados  
+- Código fuente para entrenamiento, predicción y validación.  
+- Conjunto de datos y máscaras de referencia.  
+- Modelos preentrenados y resultados de evaluación.  
+- Documentación técnica y resultados de rendimiento (métricas Dice e IoU).  
 
 ---
 
 **Contacto:**  
-Para dudas o sugerencias, por favor contacta con [alvarocamara15@gmail.com](mailto:alvarocamara15@gmail.com)
+📧 [alvarocamara15@gmail.com](mailto:alvarocamara15@gmail.com)
+
