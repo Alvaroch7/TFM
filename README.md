@@ -20,7 +20,7 @@ El repositorio incluye los scripts de entrenamiento, predicción y evaluación d
 
 - **/data** → Contiene los datos utilizados durante el entrenamiento, incluyendo el archivo `Study.vtk` (imagen de resonancia magnética) y las máscaras binarias correspondientes a cada estructura anatómica.  
 - **/models** → Carpeta donde se almacenan las redes neuronales ya entrenadas y las gráficas de entrenamiento (curvas de pérdida).  
-- **/outputs** → Contiene las salidas generadas durante la fase de predicción: imágenes, volúmenes `.vtk` y reconstrucciones 3D.  
+- **/output** → Contiene las salidas generadas durante la fase de predicción: imágenes, volúmenes `.vtk` y reconstrucciones 3D.  
 - **/test** → Carpeta con las imágenes y máscaras reales utilizadas en la fase de validación.  
 - **/output_test** → Carpeta donde se guardan los resultados de la evaluación automática realizada sobre los datos de `/test`.  
 
