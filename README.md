@@ -80,8 +80,7 @@ El archivo está configurado para ejecutarse de manera automática, modificando 
 
 ## Contenido del repositorio
 
-- Código fuente para entrenamiento, predicción y validación.  
-- Conjunto de datos y máscaras de referencia: https://www.dropbox.com/scl/fo/98wbbhjb7xvh6fjz2mdd6/AEb_yZlzlCl7cJ3y6hD1LvQ?rlkey=ae4wovf0yja48gunzritfi28u&st=8p0kkplf&dl=0
+- Código fuente para entrenamiento, predicción y validación. 
 - Modelos preentrenados y resultados de evaluación.  
 - Documentación técnica y resultados de rendimiento (métricas Dice e IoU).  
 
